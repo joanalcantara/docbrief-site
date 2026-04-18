@@ -1,34 +1,28 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocBrief — Analiza cualquier documento en segundos</title>
+    <title>DocBrief - Analyze any document in seconds</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1A1A2E; line-height: 1.6; }
         .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-        
-        /* Hero */
+        nav { display: flex; justify-content: center; align-items: center; gap: 24px; padding: 20px; border-bottom: 1px solid #eee; position: relative; }
+        nav a { text-decoration: none; color: #1A1A2E; font-weight: 600; font-size: 15px; }
+        nav a:hover { color: #534AB7; }
+        .lang-toggle { position: absolute; right: 24px; background: #1A1A2E; color: #fff; border: none; border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .lang-toggle:hover { background: #534AB7; }
         .hero { text-align: center; padding: 80px 24px 40px; }
         .hero h1 { font-size: 42px; font-weight: 700; margin-bottom: 12px; }
         .hero p { font-size: 18px; color: #666; max-width: 500px; margin: 0 auto 32px; }
         .badge { display: inline-block; background: #1A1A2E; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; margin: 0 8px 8px; }
         .badge.outline { background: #fff; color: #1A1A2E; border: 2px solid #1A1A2E; }
-        
-        /* Features */
         .features { padding: 40px 0; }
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 24px; }
         .feature { background: #F8F9FB; border-radius: 14px; padding: 20px; }
         .feature h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
         .feature p { font-size: 14px; color: #555; }
-        
-        /* Nav */
-        nav { display: flex; justify-content: center; gap: 24px; padding: 20px; border-bottom: 1px solid #eee; }
-        nav a { text-decoration: none; color: #1A1A2E; font-weight: 600; font-size: 15px; }
-        nav a:hover { color: #534AB7; }
-
-        /* Privacy */
         .privacy { padding: 60px 0 80px; }
         .privacy h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
         .privacy .date { font-size: 14px; color: #999; margin-bottom: 32px; }
@@ -36,135 +30,102 @@
         .privacy p, .privacy li { font-size: 15px; color: #333; margin-bottom: 12px; }
         .privacy ul { padding-left: 20px; }
         .privacy li { margin-bottom: 8px; }
-
-        /* Footer */
         footer { text-align: center; padding: 40px 24px; border-top: 1px solid #eee; font-size: 13px; color: #999; }
     </style>
 </head>
 <body>
-
 <nav>
-    <a href="/">DocBrief</a>
-    <a href="/privacy">Privacidad</a>
-    <a href="mailto:soporte@docbrief.app">Contacto</a>
+    <a href="/" data-es="DocBrief" data-en="DocBrief">DocBrief</a>
+    <a href="/privacy" data-es="Privacidad" data-en="Privacy">Privacidad</a>
+    <a href="mailto:soporte@docbrief.app" data-es="Contacto" data-en="Contact">Contacto</a>
+    <button class="lang-toggle" id="langBtn" onclick="toggleLang()">EN</button>
 </nav>
-
 <div id="home">
     <div class="hero">
         <h1>DocBrief</h1>
-        <p>Analiza cualquier documento en segundos con inteligencia artificial. Extrae partes, fechas, obligaciones y nivel de riesgo al instante.</p>
-        <a class="badge" href="#">Próximamente en App Store</a>
-        <a class="badge outline" href="#">Próximamente en Google Play</a>
+        <p data-es="Analiza cualquier documento en segundos con inteligencia artificial. Extrae partes, fechas, obligaciones y nivel de riesgo al instante." data-en="Analyze any document in seconds with artificial intelligence. Extract parties, dates, obligations, and risk level instantly.">Analiza cualquier documento en segundos.</p>
+        <a class="badge" href="#" data-es="Proximamente en App Store" data-en="Coming Soon on App Store">Proximamente en App Store</a>
+        <a class="badge outline" href="#" data-es="Proximamente en Google Play" data-en="Coming Soon on Google Play">Proximamente en Google Play</a>
     </div>
-
     <div class="container">
         <div class="features">
             <div class="feature-grid">
                 <div class="feature">
-                    <h3>Análisis con IA</h3>
-                    <p>No solo escanea — entiende el documento. Extrae información clave automáticamente.</p>
+                    <h3 data-es="Analisis con IA" data-en="AI Analysis">Analisis con IA</h3>
+                    <p data-es="No solo escanea, entiende el documento." data-en="Does not just scan, understands the document.">No solo escanea.</p>
                 </div>
                 <div class="feature">
-                    <h3>Cualquier documento</h3>
-                    <p>Contratos, facturas, recibos, actas médicas, formularios, identificaciones y más.</p>
+                    <h3 data-es="Cualquier documento" data-en="Any Document">Cualquier documento</h3>
+                    <p data-es="Contratos, facturas, recibos, actas medicas y mas." data-en="Contracts, invoices, receipts, medical records and more.">Contratos, facturas y mas.</p>
                 </div>
                 <div class="feature">
-                    <h3>Multipágina</h3>
-                    <p>Captura varias páginas y obtén un análisis unificado del documento completo.</p>
+                    <h3 data-es="Multipagina" data-en="Multi-page">Multipagina</h3>
+                    <p data-es="Captura varias paginas y obten un analisis unificado." data-en="Capture multiple pages and get a unified analysis.">Captura varias paginas.</p>
                 </div>
                 <div class="feature">
-                    <h3>Comparte resultados</h3>
-                    <p>Envía el análisis por WhatsApp, email o cualquier app directamente desde DocBrief.</p>
+                    <h3 data-es="Comparte resultados" data-en="Share Results">Comparte resultados</h3>
+                    <p data-es="Envia el analisis por WhatsApp o email." data-en="Send the analysis via WhatsApp or email.">Envia por WhatsApp o email.</p>
                 </div>
                 <div class="feature">
-                    <h3>Sin anuncios</h3>
-                    <p>Experiencia limpia, sin pop-ups agresivos. 10 análisis gratis cada mes.</p>
+                    <h3 data-es="Sin anuncios" data-en="No Ads">Sin anuncios</h3>
+                    <p data-es="10 analisis gratis cada mes." data-en="10 free analyses every month.">10 analisis gratis cada mes.</p>
                 </div>
                 <div class="feature">
-                    <h3>Historial completo</h3>
-                    <p>Accede a todos tus análisis anteriores con detalle completo en cualquier momento.</p>
+                    <h3 data-es="Historial completo" data-en="Full History">Historial completo</h3>
+                    <p data-es="Accede a tus analisis anteriores en cualquier momento." data-en="Access your previous analyses at any time.">Accede a tus analisis anteriores.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <div id="privacy" class="container privacy" style="display:none;">
-    <h1>Política de Privacidad</h1>
-    <p class="date">Última actualización: 17 de abril de 2026</p>
-
-    <p>DocBrief ("la App") es operada por Joan Manuel Alcántara ("nosotros", "nuestro"). Esta política describe cómo recopilamos, usamos y protegemos la información cuando utilizas DocBrief.</p>
-
-    <h2>1. Información que recopilamos</h2>
-    <p>DocBrief recopila la siguiente información:</p>
+    <h1 data-es="Politica de Privacidad" data-en="Privacy Policy">Politica de Privacidad</h1>
+    <p class="date" data-es="Ultima actualizacion: 17 de abril de 2026" data-en="Last updated: April 17, 2026">Ultima actualizacion: 17 de abril de 2026</p>
+    <h2 data-es="1. Datos que recopilamos" data-en="1. Data We Collect">1. Datos que recopilamos</h2>
     <ul>
-        <li><strong>Imágenes de documentos:</strong> Las fotos que tomas o seleccionas para análisis. Estas imágenes se envían a los servidores de Anthropic (Claude AI) para su procesamiento y no se almacenan permanentemente en nuestros servidores.</li>
-        <li><strong>Resultados de análisis:</strong> El tipo de documento, partes identificadas, fechas, montos, obligaciones, nivel de riesgo y resumen generados por la IA. Estos se almacenan en Supabase vinculados a un identificador de dispositivo.</li>
-        <li><strong>Identificador de dispositivo:</strong> Un identificador anónimo del dispositivo para gestionar el límite de análisis gratuitos y el historial. No recopilamos nombre, email ni datos personales directamente.</li>
-        <li><strong>Datos de uso:</strong> Conteo de análisis realizados por mes para gestionar el plan gratuito.</li>
+        <li data-es="Imagenes de documentos: enviadas a Anthropic para analisis, no almacenadas." data-en="Document images: sent to Anthropic for analysis, not stored.">Imagenes de documentos.</li>
+        <li data-es="Resultados de analisis en Supabase vinculados a identificador de dispositivo." data-en="Analysis results in Supabase linked to device identifier.">Resultados de analisis.</li>
+        <li data-es="Identificador anonimo de dispositivo. Sin nombre ni email." data-en="Anonymous device identifier. No name or email collected.">Identificador anonimo.</li>
     </ul>
-
-    <h2>2. Cómo usamos la información</h2>
+    <h2 data-es="2. Servicios de terceros" data-en="2. Third-Party Services">2. Servicios de terceros</h2>
     <ul>
-        <li>Procesar y analizar los documentos que nos envías.</li>
-        <li>Almacenar tu historial de análisis para que puedas consultarlo posteriormente.</li>
-        <li>Gestionar el límite de análisis gratuitos mensuales.</li>
-        <li>Mejorar la calidad del servicio.</li>
+        <li>Anthropic (Claude AI)</li><li>Supabase</li><li>RevenueCat</li><li>Apple / Google</li>
     </ul>
-
-    <h2>3. Servicios de terceros</h2>
-    <p>DocBrief utiliza los siguientes servicios de terceros:</p>
-    <ul>
-        <li><strong>Anthropic (Claude AI):</strong> Para el análisis de documentos mediante inteligencia artificial. Las imágenes se envían a sus servidores para procesamiento. Consulta su <a href="https://www.anthropic.com/privacy" target="_blank">política de privacidad</a>.</li>
-        <li><strong>Supabase:</strong> Para almacenamiento de datos (historial de análisis y conteo de uso). Consulta su <a href="https://supabase.com/privacy" target="_blank">política de privacidad</a>.</li>
-        <li><strong>RevenueCat:</strong> Para gestión de suscripciones y pagos. Consulta su <a href="https://www.revenuecat.com/privacy" target="_blank">política de privacidad</a>.</li>
-        <li><strong>Apple/Google:</strong> Para el procesamiento de pagos de suscripciones a través de sus respectivas tiendas.</li>
-    </ul>
-
-    <h2>4. Almacenamiento y seguridad</h2>
-    <p>Los datos se almacenan en servidores seguros de Supabase. Las imágenes de documentos no se almacenan permanentemente — se procesan en tiempo real y se descartan después del análisis. Solo el resultado del análisis (texto estructurado) se guarda en tu historial.</p>
-
-    <h2>5. Retención de datos</h2>
-    <p>Los resultados de análisis se mantienen en tu historial hasta que los elimines manualmente desde la app. Los conteos de uso se reinician mensualmente.</p>
-
-    <h2>6. Tus derechos</h2>
-    <p>Puedes:</p>
-    <ul>
-        <li>Eliminar cualquier análisis de tu historial directamente desde la app.</li>
-        <li>Solicitar la eliminación completa de tus datos enviando un email a <a href="mailto:soporte@docbrief.app">soporte@docbrief.app</a>.</li>
-        <li>Dejar de usar la app en cualquier momento sin penalización.</li>
-    </ul>
-
-    <h2>7. Menores de edad</h2>
-    <p>DocBrief no está dirigida a menores de 13 años. No recopilamos intencionalmente información de menores de 13 años.</p>
-
-    <h2>8. Cambios a esta política</h2>
-    <p>Podemos actualizar esta política ocasionalmente. Publicaremos la versión actualizada en esta página con la fecha de la última modificación.</p>
-
-    <h2>9. Contacto</h2>
-    <p>Si tienes preguntas sobre esta política de privacidad, contáctanos en:</p>
-    <p>
-        <strong>Email:</strong> <a href="mailto:soporte@docbrief.app">soporte@docbrief.app</a><br>
-        <strong>Responsable:</strong> Joan Manuel Alcántara<br>
-        <strong>Ubicación:</strong> Santo Domingo, República Dominicana
-    </p>
+    <h2 data-es="3. Contacto" data-en="3. Contact">3. Contacto</h2>
+    <p><strong>Email:</strong> <a href="mailto:soporte@docbrief.app">soporte@docbrief.app</a><br>Joan Manuel Alcantara - Santo Domingo, Republica Dominicana</p>
 </div>
-
 <footer>
-    &copy; 2026 DocBrief. Todos los derechos reservados.<br>
-    <a href="/privacy" style="color:#999;">Política de Privacidad</a> · <a href="mailto:soporte@docbrief.app" style="color:#999;">Contacto</a>
+    &copy; 2026 DocBrief. <span data-es="Todos los derechos reservados." data-en="All rights reserved.">Todos los derechos reservados.</span><br>
+    <a href="/privacy" style="color:#999;" data-es="Politica de Privacidad" data-en="Privacy Policy">Politica de Privacidad</a> &nbsp;·&nbsp;
+    <a href="mailto:soporte@docbrief.app" style="color:#999;" data-es="Contacto" data-en="Contact">Contacto</a>
 </footer>
-
 <script>
+    let currentLang = 'es';
+    function detectLang() {
+        const saved = localStorage.getItem('docbrief_lang');
+        if (saved) return saved;
+        return (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en';
+    }
+    function applyLang(lang) {
+        currentLang = lang;
+        localStorage.setItem('docbrief_lang', lang);
+        document.documentElement.lang = lang;
+        document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
+        document.querySelectorAll('[data-es]').forEach(el => {
+            const text = el.getAttribute('data-' + lang);
+            if (text !== null) el.textContent = text;
+        });
+        document.title = lang === 'es' ? 'DocBrief - Analiza cualquier documento en segundos' : 'DocBrief - Analyze any document in seconds';
+    }
+    function toggleLang() { applyLang(currentLang === 'es' ? 'en' : 'es'); }
     function showSection() {
-        const hash = window.location.pathname;
-        const isPrivacy = hash.includes('privacy');
+        const isPrivacy = window.location.pathname.includes('privacy');
         document.getElementById('home').style.display = isPrivacy ? 'none' : 'block';
         document.getElementById('privacy').style.display = isPrivacy ? 'block' : 'none';
     }
     showSection();
-    window.addEventListener('hashchange', showSection);
+    applyLang(detectLang());
+    window.addEventListener('popstate', showSection);
 </script>
-
 </body>
 </html>
