@@ -1,131 +1,860 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocBrief - Analyze any document in seconds</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1A1A2E; line-height: 1.6; }
-        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-        nav { display: flex; justify-content: center; align-items: center; gap: 24px; padding: 20px; border-bottom: 1px solid #eee; position: relative; }
-        nav a { text-decoration: none; color: #1A1A2E; font-weight: 600; font-size: 15px; }
-        nav a:hover { color: #534AB7; }
-        .lang-toggle { position: absolute; right: 24px; background: #1A1A2E; color: #fff; border: none; border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
-        .lang-toggle:hover { background: #534AB7; }
-        .hero { text-align: center; padding: 80px 24px 40px; }
-        .hero h1 { font-size: 42px; font-weight: 700; margin-bottom: 12px; }
-        .hero p { font-size: 18px; color: #666; max-width: 500px; margin: 0 auto 32px; }
-        .badge { display: inline-block; background: #1A1A2E; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; margin: 0 8px 8px; }
-        .badge.outline { background: #fff; color: #1A1A2E; border: 2px solid #1A1A2E; }
-        .features { padding: 40px 0; }
-        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 24px; }
-        .feature { background: #F8F9FB; border-radius: 14px; padding: 20px; }
-        .feature h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-        .feature p { font-size: 14px; color: #555; }
-        .privacy { padding: 60px 0 80px; }
-        .privacy h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-        .privacy .date { font-size: 14px; color: #999; margin-bottom: 32px; }
-        .privacy h2 { font-size: 20px; font-weight: 700; margin: 28px 0 12px; }
-        .privacy p, .privacy li { font-size: 15px; color: #333; margin-bottom: 12px; }
-        .privacy ul { padding-left: 20px; }
-        .privacy li { margin-bottom: 8px; }
-        footer { text-align: center; padding: 40px 24px; border-top: 1px solid #eee; font-size: 13px; color: #999; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, viewport-fit=cover" />
+  <title>DocBrief – Document Intelligence</title>
+  <meta name="description" content="DocBrief turns any document into actionable intelligence. Upload, analyze, and understand contracts, legal filings, and business docs in seconds." />
+  <meta name="apple-itunes-app" content="app-id=6762515974" />
+  <meta property="og:title" content="DocBrief – Document Intelligence" />
+  <meta property="og:description" content="AI-powered document analysis for legal and business professionals." />
+  <meta property="og:url" content="https://docbrief.app" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --navy:        #1A237E;
+      --navy-dark:   #111756;
+      --navy-mid:    #1e2a8a;
+      --mint:        #00FF9D;
+      --mint-dim:    rgba(0,255,157,0.12);
+      --mint-glow:   rgba(0,255,157,0.06);
+      --cyan:        #00E5FF;
+      --cyan-dim:    rgba(0,229,255,0.1);
+      --white:       #ffffff;
+      --white-dim:   rgba(255,255,255,0.6);
+      --white-faint: rgba(255,255,255,0.1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,157,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,157,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 64px;
+      background: rgba(17,23,86,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--white-faint);
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+
+    .nav-logo-icon {
+      width: 32px; height: 32px; background: var(--mint); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .nav-logo-text {
+      font-family: 'Space Mono', monospace; font-size: 1.05rem; font-weight: 700;
+      color: var(--white); letter-spacing: -0.02em;
+    }
+    .nav-logo-text span { color: var(--mint); }
+
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+
+    .nav-link {
+      color: var(--white-dim); text-decoration: none; font-size: 0.82rem;
+      font-weight: 400; transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--mint); }
+
+    .lang-toggle {
+      display: flex; background: var(--white-faint); border-radius: 20px;
+      overflow: hidden; border: 1px solid var(--white-faint);
+    }
+    .lang-btn {
+      padding: 0.3rem 0.75rem; font-size: 0.72rem; font-weight: 500;
+      color: var(--white-dim); cursor: pointer; border: none;
+      background: transparent; transition: all 0.2s; letter-spacing: 0.05em;
+    }
+    .lang-btn.active { background: var(--mint); color: var(--navy); }
+
+    .nav-cta {
+      background: var(--mint); color: var(--navy); text-decoration: none;
+      padding: 0.5rem 1.25rem; border-radius: 6px; font-size: 0.82rem;
+      font-weight: 500; transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: #00e88a; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      position: relative; z-index: 1;
+      padding: 100px 3rem 4rem;
+      max-width: 1280px; margin: 0 auto;
+    }
+
+    .hero-top { text-align: center; margin-bottom: 3.5rem; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--mint-dim); border: 1px solid rgba(0,255,157,0.2);
+      border-radius: 20px; padding: 0.3rem 1rem;
+      font-size: 0.72rem; font-weight: 500; color: var(--mint);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .hero-h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2rem, 4.5vw, 3.8rem);
+      font-weight: 700; line-height: 1.1; letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .hero-h1 .mint { color: var(--mint); }
+    .hero-h1 .cyan { color: var(--cyan); }
+
+    .hero-sub {
+      max-width: 560px; margin: 0 auto 2rem;
+      font-size: 1rem; font-weight: 300; line-height: 1.7; color: var(--white-dim);
+      opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards;
+    }
+
+    /* 3-COL */
+    .hero-cols {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 2rem; align-items: center;
+      opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+
+    .hero-features-left, .hero-features-right {
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+    .hero-features-right { text-align: right; }
+
+    .feat-item { display: flex; align-items: flex-start; gap: 0.85rem; }
+    .hero-features-right .feat-item { flex-direction: row-reverse; }
+
+    .feat-icon {
+      width: 48px; height: 48px; min-width: 48px;
+      background: var(--mint-dim); border: 1px solid rgba(0,255,157,0.18);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .feat-item h3 { font-size: 0.88rem; font-weight: 500; margin-bottom: 0.3rem; }
+    .feat-item p { font-size: 0.78rem; font-weight: 300; color: var(--white-dim); line-height: 1.55; }
+
+    /* PHONE */
+    .phone-wrap { width: 240px; display: flex; justify-content: center; }
+
+    .phone {
+      width: 220px; height: 450px;
+      background: #080e3a;
+      border-radius: 38px;
+      border: 2px solid rgba(0,255,157,0.18);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 40px 80px rgba(0,0,0,0.5), 0 0 80px rgba(0,255,157,0.07);
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    .phone-notch {
+      width: 80px; height: 22px;
+      background: #080e3a; border-radius: 0 0 14px 14px;
+      margin: 0 auto; position: relative; z-index: 2;
+      border: 1px solid rgba(0,255,157,0.08); border-top: none;
+    }
+
+    .phone::after {
+      content: ''; position: absolute; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--mint), transparent);
+      top: 10%; animation: scanLine 3s ease-in-out infinite; opacity: 0.6; z-index: 5;
+    }
+
+    @keyframes scanLine {
+      0%   { top: 8%; opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.6; }
+      100% { top: 88%; opacity: 0; }
+    }
+
+    .phone-screen {
+      flex: 1; padding: 0.75rem;
+      display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden;
+    }
+
+    .phone-header {
+      display: flex; align-items: center; justify-content: space-between; padding: 0.25rem 0;
+    }
+    .phone-app-name {
+      font-family: 'Space Mono', monospace; font-size: 0.55rem;
+      font-weight: 700; color: var(--mint); letter-spacing: 0.05em;
+    }
+    .phone-dot {
+      width: 6px; height: 6px; background: var(--mint); border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .phone-doc {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px; padding: 0.6rem;
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .phone-doc-name {
+      font-size: 0.48rem; color: var(--cyan); font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .dl { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.07); }
+    .w90{width:90%} .w75{width:75%} .w85{width:85%} .w50{width:50%}
+
+    .phone-analyzing {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.35rem 0.5rem;
+      background: var(--mint-dim); border: 1px solid rgba(0,255,157,0.18);
+      border-radius: 6px; font-size: 0.46rem; color: var(--mint); font-weight: 500;
+    }
+    .dots span {
+      display: inline-block; width: 3px; height: 3px;
+      background: var(--mint); border-radius: 50%; margin: 0 1px;
+      animation: dot 1.4s ease infinite;
+    }
+    .dots span:nth-child(2){animation-delay:.2s} .dots span:nth-child(3){animation-delay:.4s}
+    @keyframes dot {
+      0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1);opacity:1}
+    }
+
+    .phone-insight {
+      background: rgba(26,35,126,0.6); border: 1px solid rgba(0,229,255,0.18);
+      border-left: 2px solid var(--cyan); border-radius: 0 6px 6px 0;
+      padding: 0.45rem 0.55rem; font-size: 0.44rem;
+      color: rgba(255,255,255,0.75); line-height: 1.55;
+      animation: fadeInCard 0.5s ease 2.5s both;
+    }
+
+    .phone-tags {
+      display: flex; flex-wrap: wrap; gap: 0.25rem;
+      animation: fadeInCard 0.5s ease 3s both;
+    }
+    .phone-tag {
+      font-size: 0.4rem; color: var(--mint);
+      border: 1px solid rgba(0,255,157,0.22); border-radius: 3px;
+      padding: 0.15rem 0.35rem; font-weight: 500; text-transform: uppercase;
+    }
+
+    .phone-btn {
+      margin-top: auto; background: var(--mint); color: var(--navy);
+      border-radius: 8px; padding: 0.5rem;
+      font-size: 0.5rem; font-weight: 700; font-family: 'Space Mono', monospace;
+      text-align: center; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+
+    @keyframes fadeInCard {
+      from{opacity:0;transform:translateX(-4px)} to{opacity:1;transform:translateX(0)}
+    }
+
+    /* DOWNLOAD BUTTONS */
+    .hero-download {
+      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+      margin-top: 3rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.65s forwards;
+    }
+
+    .store-btn {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none;
+      min-width: 175px; transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .store-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+
+    .store-btn-primary { background: var(--white); color: var(--navy); }
+    .store-btn-secondary {
+      background: transparent; border: 1px solid var(--white-faint);
+      color: var(--white); opacity: 0.45; pointer-events: none;
+    }
+
+    .store-icon { font-size: 1.75rem; line-height: 1; }
+    .store-sub { font-size: 0.58rem; letter-spacing: 0.08em; opacity: 0.6; display: block; text-transform: uppercase; }
+    .store-name { font-size: 0.95rem; font-weight: 500; display: block; }
+
+    /* DIVIDER */
+    .divider {
+      position: relative; z-index: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--white-faint), transparent);
+      margin: 4rem 0;
+    }
+
+    /* FEATURES DETAIL */
+    .features-section {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto; padding: 2rem 3rem 5rem;
+    }
+
+    .section-label {
+      text-align: center; font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--mint); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      text-align: center; font-family: 'Space Mono', monospace;
+      font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700;
+      letter-spacing: -0.03em; margin-bottom: 3.5rem;
+    }
+
+    .feature-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center; margin-bottom: 5rem;
+    }
+    .feature-row.rev { direction: rtl; }
+    .feature-row.rev > * { direction: ltr; }
+
+    .feature-visual {
+      background: var(--navy-dark); border: 1px solid var(--white-faint);
+      border-radius: 16px; height: 280px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .feature-visual::before {
+      content: ''; position: absolute; top: -30%; left: -30%;
+      width: 80%; height: 80%;
+      background: radial-gradient(circle, var(--mint-glow) 0%, transparent 70%);
+    }
+
+    .fv { padding: 1.5rem; width: 100%; display: flex; flex-direction: column; gap: 0.6rem; }
+    .fv-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mint); font-weight: 500; }
+
+    .fv-bar { height: 6px; border-radius: 3px; background: var(--white-faint); position: relative; overflow: hidden; }
+    .fv-fill {
+      position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px;
+      background: linear-gradient(90deg, var(--mint), var(--cyan));
+      animation: barFill 2s ease 1s both;
+    }
+    @keyframes barFill { from{width:0} }
+
+    .fv-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--mint-dim); border: 1px solid rgba(0,255,157,0.18);
+      border-radius: 6px; padding: 0.4rem 0.65rem;
+      font-size: 0.65rem; color: var(--mint); font-weight: 500; width: fit-content;
+    }
+    .fv-alert {
+      background: rgba(0,229,255,0.07); border: 1px solid rgba(0,229,255,0.18);
+      border-left: 2px solid var(--cyan); border-radius: 0 6px 6px 0;
+      padding: 0.55rem 0.75rem; font-size: 0.7rem; color: rgba(255,255,255,0.8); line-height: 1.5;
+    }
+
+    .feature-text h3 {
+      font-family: 'Space Mono', monospace; font-size: 1.4rem; font-weight: 700;
+      letter-spacing: -0.03em; margin-bottom: 0.75rem; line-height: 1.25;
+    }
+    .feature-text h3 .mint { color: var(--mint); }
+    .feature-text p {
+      font-size: 0.88rem; font-weight: 300; color: var(--white-dim);
+      line-height: 1.7; margin-bottom: 1.25rem;
+    }
+    .feature-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      color: var(--mint); text-decoration: none; font-size: 0.82rem; font-weight: 500;
+      transition: gap 0.2s;
+    }
+    .feature-link:hover { gap: 0.65rem; }
+
+    /* TESTIMONIALS */
+    .testimonials {
+      position: relative; z-index: 1;
+      background: var(--navy-dark);
+      border-top: 1px solid var(--white-faint); border-bottom: 1px solid var(--white-faint);
+      padding: 5rem 3rem;
+    }
+    .testimonials-inner { max-width: 1100px; margin: 0 auto; }
+
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
+
+    .testi-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--white-faint);
+      border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s;
+    }
+    .testi-card:hover { border-color: rgba(0,255,157,0.3); }
+
+    .testi-quote {
+      font-size: 0.85rem; font-weight: 300; line-height: 1.7;
+      color: var(--white-dim); margin-bottom: 1.25rem; font-style: italic;
+    }
+    .testi-author { display: flex; align-items: center; gap: 0.75rem; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--mint-dim); border: 1px solid rgba(0,255,157,0.22);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .testi-name { font-size: 0.8rem; font-weight: 500; margin-bottom: 0.1rem; }
+    .testi-role { font-size: 0.7rem; color: var(--mint); }
+
+    /* DOWNLOAD SECTION */
+    .download-section {
+      position: relative; z-index: 1; text-align: center; padding: 6rem 2rem;
+    }
+    .download-section h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1.75rem, 3.5vw, 2.8rem); font-weight: 700;
+      letter-spacing: -0.03em; margin-bottom: 0.75rem;
+    }
+    .download-section p { color: var(--white-dim); font-size: 0.9rem; margin-bottom: 2.5rem; }
+
+    /* FOOTER */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--white-faint);
+      padding: 2rem 2.5rem; background: var(--navy-dark);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { font-family: 'Space Mono', monospace; font-size: 0.95rem; font-weight: 700; }
+    .footer-logo span { color: var(--mint); }
+
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.72rem; color: var(--white-dim); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--mint); }
+
+    .footer-social { display: flex; gap: 0.75rem; }
+    .social-btn {
+      width: 32px; height: 32px; border-radius: 8px; background: var(--white-faint);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; font-size: 0.85rem; transition: background 0.2s;
+    }
+    .social-btn:hover { background: var(--mint-dim); }
+
+    .footer-copy {
+      font-size: 0.65rem; color: rgba(255,255,255,0.22);
+      width: 100%; text-align: center; padding-top: 0.5rem;
+      border-top: 1px solid var(--white-faint);
+    }
+
+    /* QR STICKY */
+    #qr-sticky {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 300;
+      background: var(--white); border-radius: 12px; padding: 1rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      text-align: center; display: none;
+      flex-direction: column; align-items: center; gap: 0.5rem; width: 148px;
+    }
+    .qr-label { font-size: 0.65rem; color: var(--navy); font-weight: 400; line-height: 1.4; }
+    .qr-cta { font-size: 0.7rem; font-weight: 700; color: var(--navy); text-decoration: none; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)}
+    }
+
+    /* i18n */
+    html[data-lang="en"] .es-only { display: none; }
+    html[data-lang="es"] .en-only { display: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero-cols { grid-template-columns: 1fr; justify-items: center; }
+      .hero-features-left, .hero-features-right { display: none; }
+      .feature-row { grid-template-columns: 1fr; }
+      .feature-row.rev { direction: ltr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      nav { padding: 0 1.25rem; }
+      .nav-link { display: none; }
+      .hero { padding: 90px 1.25rem 3rem; }
+      .features-section { padding: 2rem 1.25rem 4rem; }
+      .testimonials { padding: 3rem 1.25rem; }
+      footer { flex-direction: column; text-align: center; }
+      .hero-download { flex-direction: column; align-items: center; }
+      .store-btn { width: 100%; max-width: 260px; }
+    }
+  </style>
 </head>
 <body>
+
+<!-- NAV -->
 <nav>
-    <a href="/" data-es="DocBrief" data-en="DocBrief">DocBrief</a>
-    <a href="/privacy" data-es="Privacidad" data-en="Privacy">Privacidad</a>
-    <a href="mailto:soporte@docbrief.app" data-es="Contacto" data-en="Contact">Contacto</a>
-    <button class="lang-toggle" id="langBtn" onclick="toggleLang()">EN</button>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="2" y="2" width="10" height="13" rx="2" fill="#1A237E"/>
+        <rect x="4" y="5" width="6" height="1.5" rx=".75" fill="#00FF9D"/>
+        <rect x="4" y="8" width="6" height="1.5" rx=".75" fill="#00FF9D" opacity=".6"/>
+        <rect x="4" y="11" width="4" height="1.5" rx=".75" fill="#00FF9D" opacity=".3"/>
+        <circle cx="14" cy="13" r="3" fill="#00E5FF"/>
+        <path d="M13 13l1 1 2-2" stroke="#1A237E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">Doc<span>Brief</span></span>
+  </a>
+  <div class="nav-right">
+    <a href="#features" class="nav-link en-only">Features</a>
+    <a href="#features" class="nav-link es-only">Funciones</a>
+    <a href="#download" class="nav-link en-only">Download</a>
+    <a href="#download" class="nav-link es-only">Descargar</a>
+    <a href="mailto:support@docbrief.app" class="nav-link en-only">Support</a>
+    <a href="mailto:support@docbrief.app" class="nav-link es-only">Soporte</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+    <a href="#download" class="nav-cta en-only">Get the App</a>
+    <a href="#download" class="nav-cta es-only">Descargar App</a>
+  </div>
 </nav>
-<div id="home">
-    <div class="hero">
-        <h1>DocBrief</h1>
-        <p data-es="Analiza cualquier documento en segundos con inteligencia artificial. Extrae partes, fechas, obligaciones y nivel de riesgo al instante." data-en="Analyze any document in seconds with artificial intelligence. Extract parties, dates, obligations, and risk level instantly.">Analiza cualquier documento en segundos.</p>
-        <a class="badge" href="#" data-es="Proximamente en App Store" data-en="Coming Soon on App Store">Proximamente en App Store</a>
-        <a class="badge outline" href="#" data-es="Proximamente en Google Play" data-en="Coming Soon on Google Play">Proximamente en Google Play</a>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-top">
+    <div class="hero-eyebrow">
+      <span>⚡</span>
+      <span class="en-only">AI-Powered · Legal-Grade Document Analysis</span>
+      <span class="es-only">Análisis Legal con Inteligencia Artificial</span>
     </div>
-    <div class="container">
-        <div class="features">
-            <div class="feature-grid">
-                <div class="feature">
-                    <h3 data-es="Analisis con IA" data-en="AI Analysis">Analisis con IA</h3>
-                    <p data-es="No solo escanea, entiende el documento." data-en="Does not just scan, understands the document.">No solo escanea.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-es="Cualquier documento" data-en="Any Document">Cualquier documento</h3>
-                    <p data-es="Contratos, facturas, recibos, actas medicas y mas." data-en="Contracts, invoices, receipts, medical records and more.">Contratos, facturas y mas.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-es="Multipagina" data-en="Multi-page">Multipagina</h3>
-                    <p data-es="Captura varias paginas y obten un analisis unificado." data-en="Capture multiple pages and get a unified analysis.">Captura varias paginas.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-es="Comparte resultados" data-en="Share Results">Comparte resultados</h3>
-                    <p data-es="Envia el analisis por WhatsApp o email." data-en="Send the analysis via WhatsApp or email.">Envia por WhatsApp o email.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-es="Sin anuncios" data-en="No Ads">Sin anuncios</h3>
-                    <p data-es="10 analisis gratis cada mes." data-en="10 free analyses every month.">10 analisis gratis cada mes.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-es="Historial completo" data-en="Full History">Historial completo</h3>
-                    <p data-es="Accede a tus analisis anteriores en cualquier momento." data-en="Access your previous analyses at any time.">Accede a tus analisis anteriores.</p>
-                </div>
-            </div>
+    <h1 class="hero-h1">
+      <span class="en-only">Every document,<br/><span class="mint">understood</span> in seconds.</span>
+      <span class="es-only">Cada documento,<br/><span class="mint">analizado</span> en segundos.</span>
+    </h1>
+    <p class="hero-sub">
+      <span class="en-only">DocBrief uses AI to extract key clauses, risks, and obligations from any legal or business document — so you act faster, with confidence.</span>
+      <span class="es-only">DocBrief usa IA para extraer cláusulas clave, riesgos y obligaciones de cualquier documento legal o empresarial — para que actúes más rápido, con seguridad.</span>
+    </p>
+  </div>
+
+  <div class="hero-cols">
+    <!-- LEFT -->
+    <div class="hero-features-left">
+      <div class="feat-item">
+        <div class="feat-icon">📄</div>
+        <div>
+          <h3 class="en-only">Instant Upload</h3>
+          <h3 class="es-only">Carga Instantánea</h3>
+          <p class="en-only">PDF, image, or scan — any format from your camera or files app.</p>
+          <p class="es-only">PDF, imagen o escaneo — cualquier formato desde tu cámara o archivos.</p>
         </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">⚖️</div>
+        <div>
+          <h3 class="en-only">Legal Precision</h3>
+          <h3 class="es-only">Precisión Legal</h3>
+          <p class="en-only">Jurisdiction, termination, liability caps, arbitration — extracted automatically.</p>
+          <p class="es-only">Jurisdicción, terminación, responsabilidad, arbitraje — extraídos automáticamente.</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🔒</div>
+        <div>
+          <h3 class="en-only">Private by Design</h3>
+          <h3 class="es-only">Privacidad Total</h3>
+          <p class="en-only">Documents never stored or used for training. Confidential stays confidential.</p>
+          <p class="es-only">Tus documentos nunca se almacenan ni entrenan el modelo. Lo confidencial permanece así.</p>
+        </div>
+      </div>
     </div>
-</div>
-<div id="privacy" class="container privacy" style="display:none;">
-    <h1 data-es="Politica de Privacidad" data-en="Privacy Policy">Politica de Privacidad</h1>
-    <p class="date" data-es="Ultima actualizacion: 17 de abril de 2026" data-en="Last updated: April 17, 2026">Ultima actualizacion: 17 de abril de 2026</p>
-    <h2 data-es="1. Datos que recopilamos" data-en="1. Data We Collect">1. Datos que recopilamos</h2>
-    <ul>
-        <li data-es="Imagenes de documentos: enviadas a Anthropic para analisis, no almacenadas." data-en="Document images: sent to Anthropic for analysis, not stored.">Imagenes de documentos.</li>
-        <li data-es="Resultados de analisis en Supabase vinculados a identificador de dispositivo." data-en="Analysis results in Supabase linked to device identifier.">Resultados de analisis.</li>
-        <li data-es="Identificador anonimo de dispositivo. Sin nombre ni email." data-en="Anonymous device identifier. No name or email collected.">Identificador anonimo.</li>
-    </ul>
-    <h2 data-es="2. Servicios de terceros" data-en="2. Third-Party Services">2. Servicios de terceros</h2>
-    <ul>
-        <li>Anthropic (Claude AI)</li><li>Supabase</li><li>RevenueCat</li><li>Apple / Google</li>
-    </ul>
-    <h2 data-es="3. Contacto" data-en="3. Contact">3. Contacto</h2>
-    <p><strong>Email:</strong> <a href="mailto:soporte@docbrief.app">soporte@docbrief.app</a><br>Joan Manuel Alcantara - Santo Domingo, Republica Dominicana</p>
-</div>
+
+    <!-- PHONE -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-header">
+            <span class="phone-app-name">DOCBRIEF</span>
+            <div class="phone-dot"></div>
+          </div>
+          <div class="phone-doc">
+            <div class="phone-doc-name">📋 Contract_NDA_2026.pdf</div>
+            <div class="dl w90"></div>
+            <div class="dl w75"></div>
+            <div class="dl w85"></div>
+            <div class="dl w50"></div>
+          </div>
+          <div class="phone-analyzing">
+            <span class="en-only">ANALYZING</span>
+            <span class="es-only">ANALIZANDO</span>
+            <div class="dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="phone-insight">
+            ⚠ Non-compete clause — 24 months. Jurisdiction: Delaware. Legal review recommended.
+          </div>
+          <div class="phone-tags">
+            <span class="phone-tag">Termination</span>
+            <span class="phone-tag">Liability</span>
+            <span class="phone-tag">Arbitration</span>
+            <span class="phone-tag">IP Rights</span>
+          </div>
+          <div class="phone-btn en-only">View Full Analysis →</div>
+          <div class="phone-btn es-only">Ver Análisis Completo →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hero-features-right">
+      <div class="feat-item">
+        <div class="feat-icon">🔍</div>
+        <div>
+          <h3 class="en-only">Smart Extraction</h3>
+          <h3 class="es-only">Extracción Inteligente</h3>
+          <p class="en-only">Clauses, dates, parties, obligations — no manual reading required.</p>
+          <p class="es-only">Cláusulas, fechas, partes, obligaciones — sin lectura manual.</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">⚡</div>
+        <div>
+          <h3 class="en-only">Seconds, Not Hours</h3>
+          <h3 class="es-only">Segundos, No Horas</h3>
+          <p class="en-only">What takes 2 hours manually, DocBrief delivers in under 30 seconds.</p>
+          <p class="es-only">Lo que toma 2 horas manualmente, DocBrief lo entrega en menos de 30 segundos.</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">📤</div>
+        <div>
+          <h3 class="en-only">Export & Share</h3>
+          <h3 class="es-only">Exportar y Compartir</h3>
+          <p class="en-only">Export analysis as PDF and share directly with clients or colleagues.</p>
+          <p class="es-only">Exporta el análisis como PDF y compártelo directo con clientes o colegas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-download" id="hero-btns"></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES DETAIL -->
+<section class="features-section" id="features">
+  <p class="section-label en-only">How it works</p>
+  <p class="section-label es-only">Cómo funciona</p>
+  <h2 class="section-title en-only">Scan, analyze, and <span style="color:var(--mint)">act.</span></h2>
+  <h2 class="section-title es-only">Escanea, analiza y <span style="color:var(--mint)">actúa.</span></h2>
+
+  <div class="feature-row">
+    <div class="feature-visual">
+      <div class="fv">
+        <div class="fv-label en-only">Document Processing</div>
+        <div class="fv-label es-only">Procesamiento de Documento</div>
+        <div class="fv-bar"><div class="fv-fill" style="width:92%"></div></div>
+        <div class="fv-chip">✓ <span class="en-only">Contract detected — 12 pages</span><span class="es-only">Contrato detectado — 12 páginas</span></div>
+        <div class="fv-alert en-only">⚠ High-risk clause on page 4 — Liquidated damages: USD $500K</div>
+        <div class="fv-alert es-only">⚠ Cláusula de alto riesgo en página 4 — Daños pactados: USD $500K</div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <h3><span class="mint en-only">Upload</span><span class="mint es-only">Sube</span> <span class="en-only">any document</span><span class="es-only">cualquier documento</span></h3>
+      <p class="en-only">PDF, photograph, or scan — DocBrief accepts any format. Point your camera at a printed contract or upload from your files. The AI processes it in seconds and returns a structured analysis.</p>
+      <p class="es-only">PDF, fotografía o escaneo — DocBrief acepta cualquier formato. Apunta la cámara a un contrato impreso o sube desde tus archivos. La IA lo procesa en segundos y devuelve un análisis estructurado.</p>
+      <a href="#download" class="feature-link en-only">Get started free →</a>
+      <a href="#download" class="feature-link es-only">Comenzar gratis →</a>
+    </div>
+  </div>
+
+  <div class="feature-row rev">
+    <div class="feature-visual">
+      <div class="fv">
+        <div class="fv-label en-only">Key Clauses Extracted</div>
+        <div class="fv-label es-only">Cláusulas Identificadas</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.25rem">
+          <div class="fv-chip" style="background:var(--cyan-dim);border-color:rgba(0,229,255,0.22);color:var(--cyan)">🏛 <span class="en-only">Jurisdiction: New York</span><span class="es-only">Jurisdicción: Nueva York</span></div>
+          <div class="fv-chip">⏰ <span class="en-only">Term: 36 months · auto-renewal</span><span class="es-only">Plazo: 36 meses · renovación automática</span></div>
+          <div class="fv-chip" style="background:rgba(255,80,80,0.08);border-color:rgba(255,80,80,0.22);color:#ff8888">⚠ <span class="en-only">Non-compete: 24 months</span><span class="es-only">No competencia: 24 meses</span></div>
+          <div class="fv-chip">📋 <span class="en-only">Arbitration: AAA Rules</span><span class="es-only">Arbitraje: Reglas AAA</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <h3><span class="mint en-only">Precision</span><span class="mint es-only">Extracción</span> <span class="en-only">legal extraction</span><span class="es-only">legal de precisión</span></h3>
+      <p class="en-only">Identifies jurisdiction, governing law, termination, liability caps, IP ownership, non-compete terms, and arbitration clauses — automatically flagging high-risk provisions.</p>
+      <p class="es-only">Identifica jurisdicción, ley aplicable, terminación, límites de responsabilidad, propiedad intelectual, no competencia y arbitraje — marcando automáticamente las cláusulas de alto riesgo.</p>
+      <a href="#download" class="feature-link en-only">See it in action →</a>
+      <a href="#download" class="feature-link es-only">Ver en acción →</a>
+    </div>
+  </div>
+
+  <div class="feature-row">
+    <div class="feature-visual">
+      <div class="fv">
+        <div class="fv-label en-only">PDF Export Preview</div>
+        <div class="fv-label es-only">Vista Previa — Exportación PDF</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:.75rem;display:flex;flex-direction:column;gap:.4rem;">
+          <div style="font-size:.6rem;color:var(--mint);font-weight:500;letter-spacing:.06em">DOCBRIEF ANALYSIS REPORT</div>
+          <div class="dl w90" style="background:rgba(255,255,255,0.1)"></div>
+          <div class="dl w75" style="background:rgba(255,255,255,0.07)"></div>
+          <div class="dl w85" style="background:rgba(255,255,255,0.07)"></div>
+          <div style="margin-top:.35rem;padding:.4rem;background:var(--navy);border-radius:4px;font-size:.5rem;color:var(--mint);text-align:center;letter-spacing:.08em;border:1px solid rgba(0,255,157,0.18)">Analyzed with DocBrief · docbrief.app</div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <h3><span class="mint en-only">Export</span><span class="mint es-only">Exporta</span> <span class="en-only">and share instantly</span><span class="es-only">y comparte al instante</span></h3>
+      <p class="en-only">Generate a clean PDF analysis report in one tap. Share directly with clients, partners, or your legal team. Every exported document carries a professional DocBrief summary — and a link back to the app.</p>
+      <p class="es-only">Genera un informe PDF limpio con un toque. Compártelo con clientes, socios o tu equipo legal. Cada documento exportado incluye un resumen profesional de DocBrief y un enlace a la app.</p>
+      <a href="#download" class="feature-link en-only">Download DocBrief →</a>
+      <a href="#download" class="feature-link es-only">Descargar DocBrief →</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <p class="section-label en-only">Trusted by professionals</p>
+    <p class="section-label es-only">Confiado por profesionales</p>
+    <h2 class="section-title en-only">Built for those who <span style="color:var(--mint)">can't afford mistakes.</span></h2>
+    <h2 class="section-title es-only">Para quienes <span style="color:var(--mint)">no pueden cometer errores.</span></h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <p class="testi-quote en-only">"I reviewed a 40-page commercial lease in under 2 minutes. DocBrief flagged an auto-renewal clause my client almost missed. That alone justified the subscription."</p>
+        <p class="testi-quote es-only">"Revisé un contrato de arrendamiento comercial de 40 páginas en menos de 2 minutos. DocBrief marcó una cláusula de renovación automática que mi cliente casi ignoró."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">⚖️</div>
+          <div>
+            <div class="testi-name">M. Rodríguez</div>
+            <div class="testi-role en-only">Corporate Attorney · Santo Domingo</div>
+            <div class="testi-role es-only">Abogada Corporativa · Santo Domingo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote en-only">"During due diligence, DocBrief helped me process 60+ contracts in a day. The risk flagging is accurate and saves hours of manual review."</p>
+        <p class="testi-quote es-only">"En una due diligence, DocBrief me ayudó a procesar más de 60 contratos en un día. El marcado de riesgos es preciso y ahorra horas de revisión manual."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">📊</div>
+          <div>
+            <div class="testi-name">C. Méndez</div>
+            <div class="testi-role en-only">M&amp;A Analyst · Miami</div>
+            <div class="testi-role es-only">Analista M&amp;A · Miami</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote en-only">"I manage vendor contracts across three jurisdictions. DocBrief is the first tool that actually understands legal language — not just OCR."</p>
+        <p class="testi-quote es-only">"Manejo contratos con proveedores en tres jurisdicciones. DocBrief es la primera herramienta que realmente entiende el lenguaje legal — no solo OCR."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🏢</div>
+          <div>
+            <div class="testi-name">A. Torres</div>
+            <div class="testi-role">COO · Barcelona</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="download-section" id="download">
+  <p class="section-label en-only">Available now</p>
+  <p class="section-label es-only">Disponible ahora</p>
+  <h2 class="en-only">Get <span style="color:var(--mint)">DocBrief</span></h2>
+  <h2 class="es-only">Obtén <span style="color:var(--mint)">DocBrief</span></h2>
+  <p class="en-only">Free to download. Available on iPhone and iPad. Android coming soon.</p>
+  <p class="es-only">Descarga gratuita. Disponible en iPhone y iPad. Android próximamente.</p>
+  <div class="hero-download" id="download-btns"></div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-    &copy; 2026 DocBrief. <span data-es="Todos los derechos reservados." data-en="All rights reserved.">Todos los derechos reservados.</span><br>
-    <a href="/privacy" style="color:#999;" data-es="Politica de Privacidad" data-en="Privacy Policy">Politica de Privacidad</a> &nbsp;·&nbsp;
-    <a href="mailto:soporte@docbrief.app" style="color:#999;" data-es="Contacto" data-en="Contact">Contacto</a>
+  <span class="footer-logo">Doc<span>Brief</span></span>
+  <ul class="footer-links">
+    <li><a href="/privacy" class="en-only">Privacy Policy</a><a href="/privacy" class="es-only">Política de Privacidad</a></li>
+    <li><a href="/terms" class="en-only">Terms of Use</a><a href="/terms" class="es-only">Términos de Uso</a></li>
+    <li><a href="mailto:support@docbrief.app">support@docbrief.app</a></li>
+  </ul>
+  <div class="footer-social">
+    <a class="social-btn" href="#" title="X">𝕏</a>
+    <a class="social-btn" href="#" title="LinkedIn">in</a>
+  </div>
+  <p class="footer-copy">© 2026 DocBrief. All rights reserved.</p>
 </footer>
+
+<!-- QR STICKY -->
+<div id="qr-sticky">
+  <div id="qr-code"></div>
+  <p class="qr-label en-only">Scan with your phone<br/>to get the app</p>
+  <p class="qr-label es-only">Escanea con tu teléfono<br/>para descargar</p>
+  <a class="qr-cta" href="https://apps.apple.com/app/id6762515974" target="_blank" rel="noopener">
+    <span class="en-only">Get the App →</span>
+    <span class="es-only">Descargar →</span>
+  </a>
+</div>
+
 <script>
-    let currentLang = 'es';
-    function detectLang() {
-        const saved = localStorage.getItem('docbrief_lang');
-        if (saved) return saved;
-        return (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en';
+  const APP_STORE_URL = 'https://apps.apple.com/app/id6762515974';
+  const ua = navigator.userAgent || '';
+  const isIOS     = /iPhone|iPad|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+  const isMobile  = isIOS || isAndroid;
+
+  function buildBtns(id) {
+    const c = document.getElementById(id);
+    if (!c) return;
+    let html = '';
+    if (isIOS) {
+      html = `<a class="store-btn store-btn-primary" href="${APP_STORE_URL}" target="_blank" rel="noopener">
+        <span class="store-icon">🍎</span>
+        <span><span class="store-sub en-only">Download on the</span><span class="store-sub es-only">Descargar en</span><span class="store-name">App Store</span></span></a>`;
+    } else if (isAndroid) {
+      html = `<a class="store-btn store-btn-secondary">
+        <span class="store-icon">▶</span>
+        <span><span class="store-sub en-only">Coming soon to</span><span class="store-sub es-only">Próximamente en</span><span class="store-name">Google Play</span></span></a>`;
+    } else {
+      html = `<a class="store-btn store-btn-primary" href="${APP_STORE_URL}" target="_blank" rel="noopener">
+        <span class="store-icon">🍎</span>
+        <span><span class="store-sub en-only">Download on the</span><span class="store-sub es-only">Descargar en</span><span class="store-name">App Store</span></span></a>
+        <a class="store-btn store-btn-secondary">
+        <span class="store-icon">▶</span>
+        <span><span class="store-sub en-only">Coming soon to</span><span class="store-sub es-only">Próximamente en</span><span class="store-name">Google Play</span></span></a>`;
     }
-    function applyLang(lang) {
-        currentLang = lang;
-        localStorage.setItem('docbrief_lang', lang);
-        document.documentElement.lang = lang;
-        document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
-        document.querySelectorAll('[data-es]').forEach(el => {
-            const text = el.getAttribute('data-' + lang);
-            if (text !== null) el.textContent = text;
-        });
-        document.title = lang === 'es' ? 'DocBrief - Analiza cualquier documento en segundos' : 'DocBrief - Analyze any document in seconds';
-    }
-    function toggleLang() { applyLang(currentLang === 'es' ? 'en' : 'es'); }
-    function showSection() {
-        const isPrivacy = window.location.pathname.includes('privacy');
-        document.getElementById('home').style.display = isPrivacy ? 'none' : 'block';
-        document.getElementById('privacy').style.display = isPrivacy ? 'block' : 'none';
-    }
-    showSection();
-    applyLang(detectLang());
-    window.addEventListener('popstate', showSection);
+    c.innerHTML = html;
+  }
+
+  buildBtns('hero-btns');
+  buildBtns('download-btns');
+
+  // QR — desktop only
+  if (!isMobile && typeof QRCode !== 'undefined') {
+    document.getElementById('qr-sticky').style.display = 'flex';
+    new QRCode(document.getElementById('qr-code'), {
+      text: APP_STORE_URL,
+      width: 110, height: 110,
+      colorDark: '#1A237E', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+
+  // Language toggle
+  function setLang(lang) {
+    document.documentElement.setAttribute('data-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent === lang.toUpperCase());
+    });
+  }
+
+  // Auto-detect
+  if ((navigator.language || '').startsWith('es')) setLang('es');
 </script>
 </body>
 </html>
